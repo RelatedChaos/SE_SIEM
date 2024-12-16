@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+    <head>
+      {% if title %}
+      <title>{{ title }} - Defunk</title>
+      {% else %}
+      <title>Welcome to Defunk</title>
+      {% endif %}
+    </head>
+    <body>
+        <div>Nav: 
+            <a href="/index">Home</a>
+            <a href="/logout">Logout</a>
+        </div>
+        <hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </body>
+</html>
