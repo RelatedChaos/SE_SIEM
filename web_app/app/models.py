@@ -53,14 +53,3 @@ class Task(db.Model):
     complete: so.Mapped[bool] = so.mapped_column(default=False)
 
     user: so.Mapped[User] = so.relationship(back_populates='tasks')
-
-    def get_rq_job(self):
-        try:
-            rq_job = rq.job.Job.fetch(self.id, connection=current_app.redis)
-        except (redis.exceptions.RedisError, rq.exceptions.NoSuchJobError):
-            return None
-        return rq_job
-
-    def get_progress(self):
-        job = self.get_rq_job()
-        return job.meta.get('progress', 0) if job is not None else 100
