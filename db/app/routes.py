@@ -89,7 +89,36 @@ def create_user():
 
 @app.route('/events', methods = ['GET'])
 def get_events():
-     events = Null
-     return events
+     data = request.get_json()
+     events = ''
+     query = sa.select(Event).order_by(Event.p_datetime_timestamp.desc())
+     ret = {'events': []}
+     if 'page' in data:
+          events = db.paginate(query, page=int(data['page']), per_page=int(data['per_page']), error_out=False).items
+     else:
+          events = db.paginate(query, page=1, per_page=50, error_out=False).items
+     for event in events:
+          ret['events'].append(event.to_dict())
+
+     return ret
+
+@app.route('/events', methods = ['POST'])
+def post_events():
+     data = request.get_json()
+     if 'event' in data:
+          ev = Event(raw_event=data['event'])
+          db.session.add(ev)
+          db.session.commit()
+          return '200'
      
+@app.route('/events/parse', methods = ['POST'])
+def parse_events():
+     data = request.get_json()
+     if 'event' in data:
+          ev = Event(raw_event=data['event'])
+          ev.parse_raw()
+          db.session.add(ev)
+          db.session.commit()
+          return '200'
+
 

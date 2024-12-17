@@ -49,7 +49,7 @@ def logout():
 @app.route('/events')
 def get_events():
     data = {}
-    data = requests.get('http://127.0.0.1:5001/login').json()
-    return render_template('events.html', title='Events', events=data)
+    data = requests.get('http://127.0.0.1:5001/events', json={'page': '1', 'per_page': '100'}).json()
+    return render_template('events.html', title='Events', events=data['events'])
 
 

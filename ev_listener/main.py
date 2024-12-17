@@ -1,9 +1,5 @@
 from socket import *
-from flask import request
-
-
-
-
+import requests
 
 # Set the socket parameters
 host = 'localhost'
@@ -15,7 +11,7 @@ addr = (host,port)
 UDPSock = socket(AF_INET,SOCK_DGRAM)
 UDPSock.bind(addr)
 
-
+headers = {'Content-Type': 'application/json'}
 
 # Receive messages
 while 1:
@@ -24,9 +20,8 @@ while 1:
         print("Client has exited!")
         break
     else:
-        print ("\nReceived message '", data,"'")
-        request.post()
-
+        requests.post('http://127.0.0.1:5001/events/parse', json={'event':data.decode("utf-8")}, headers=headers)
+        print ("\nReceived message '", data.decode("utf-8"),"'")
 
 # Close socket
 UDPSock.close()
