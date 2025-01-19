@@ -91,11 +91,21 @@ class Event(db.Model):
 
 class Configuration(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
-    config_name: so.Mapped[str] = so.mapped_column(sa.String(64), index=True, unique=True)
-    config_type: so.Mapped[int] = so.mapped_column(sa.Integer, index=True, unique=True)
+    config_name: so.Mapped[str] = so.mapped_column(sa.String(64), index=True)
+    config_type: so.Mapped[int] = so.mapped_column(sa.Integer, index=True)
     value: so.Mapped[str] = so.mapped_column(sa.String(64), index=True)
     created_at: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
     updated_at: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "config_name": self.config_name,
+            "config_type": self.config_type,
+            "value": self.value,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None
+        }
 
 
 
@@ -132,6 +142,20 @@ class Incident(db.Model):
     correlation_rule: so.Mapped[CorrelationRule] = so.relationship(back_populates='incidents')
 
     #helper functions
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "incident_timestamp": self.incident_timestamp.isoformat() if self.incident_timestamp else None,
+            "status": self.status,
+            "description": self.description,
+            "notes": self.notes,
+            "event_id": self.event_id,
+            "user_id": self.user_id,
+            "correlation_id": self.correlation_id,
+            "incident_events": self.incident_events.to_dict() if self.incident_events else None,
+            "responder": self.responder.to_dict() if self.responder else None,
+            "correlation_rule": self.correlation_rule.to_dict() if self.correlation_rule else None,
+        }
 
 
 class AutomaticResponse(db.Model):

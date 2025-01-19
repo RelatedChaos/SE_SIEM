@@ -1,12 +1,18 @@
 {% extends "base.html" %}
 
-
-
 {% block content %}
-    {% for orc in orchestrations %}
-    <div><p>{{ orc }}</p></div>
-    <button onclick="processOrc('{{ orc.location }}')">Run Action</button>
-    {% endfor %}
+    <div class="orchestration-header">
+        <h1>Orchestrations</h1>
+        <button class="btn-create" onclick="location.href='/create_orchestration'">Create New Orchestration</button>
+    </div>
+    <div class="orchestrations-container">
+        {% for orc in orchestrations %}
+        <div class="orc-card">
+            <p><strong>Orchestration:</strong> {{ orc }}</p>
+            <button class="btn-run-action" onclick="processOrc('{{ orc.location }}')">Run Action</button>
+        </div>
+        {% endfor %}
+    </div>
 
     <script>
         function processOrc(orc) {
@@ -18,7 +24,30 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
+                    alert('Failed to process orchestration.');
                 });
         }
     </script>
+
+    <style>
+        .orchestration-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .btn-create {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn-create:hover {
+            background-color: #218838;
+        }
+    </style>
 {% endblock %}

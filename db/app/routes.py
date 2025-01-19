@@ -1,9 +1,10 @@
 from app import app
 from app import db
-from app.models import User, Event, AutomaticResponse
+from app.models import User, Event, AutomaticResponse, Configuration, Incident
 import sqlalchemy as sa
 from flask import request
 from flask_httpauth import HTTPBasicAuth
+from datetime import datetime, timezone
 
 basic_auth = HTTPBasicAuth()
 
@@ -42,7 +43,8 @@ def login():
      user_data = {
           'user_id': user.id,
           'username': user.username,
-          'role': user.role
+          'role': user.role,
+          'method': user.connection_method
      }
 
      return user_data
@@ -140,3 +142,71 @@ def put_orchestration():
      return '200'
 
 
+@app.route('/configuration', methods = ['GET', 'POST'])
+def configurations():
+     data = request.get_json()
+     print(request.headers, request.data)
+     if request.method == 'GET':
+          if 'type' in data:
+               configuration = Configuration.query.filter_by(config_type = data['type']).all()
+               configurations = [conf.to_dict() for conf in configuration]
+               return configurations
+          else:
+               configuration = Configuration.query.all()
+               configurations = [conf.to_dict() for conf in configuration]
+               return configurations
+     elif request.method == 'POST':
+          configuration = Configuration()
+          configuration.config_name = data['name']
+          configuration.config_type = data['type']
+          configuration.value = data['value']
+          db.session.add(configuration)
+          db.session.commit()
+          return '200'
+     
+@app.route('/incident', methods = ['GET','PUT'])
+def incidnet():
+     data = request.get_json()
+     if request.method == 'GET':
+          if 'id' in data:
+               incident = Incident.query.filter_by(id = data['id']).all()
+               ret = [inc.to_dict() for inc in incident]
+               return ret
+          else:
+               incident = Incident.query.all()
+               ret = [inc.to_dict() for inc in incident]
+               return ret
+     elif request.method == 'PUT':
+          new_incident = Incident(
+               incident_timestamp=datetime.now(timezone.utc),
+               status=data["status"],
+               description=data["description"],
+               notes=data.get("notes"),  # Optional field
+               event_id=data["event_id"],
+               user_id=data["user_id"],
+               correlation_id=data["correlation_id"],
+          )
+          db.session.add(new_incident)
+          db.session.commit()
+          return '200'
+          
+
+@app.route('/incident/<int:incident_id>', methods=['POST'])
+def edit_incident(incident_id):
+     data = request.get_json()
+     incident = Incident.query.get_or_404(incident_id, description=f"Incident with ID {incident_id} not found.")
+     if "status" in data:
+          incident.status = data["status"]
+     if "description" in data:
+          incident.description = data["description"]
+     if "notes" in data:
+          incident.notes = data["notes"]
+     if "event_id" in data:
+          incident.event_id = data["event_id"]
+     if "user_id" in data:
+          incident.user_id = data["user_id"]
+     if "correlation_id" in data:
+          incident.correlation_id = data["correlation_id"]
+     incident.updated_at = datetime.now(timezone.utc)
+     db.session.commit()
+     

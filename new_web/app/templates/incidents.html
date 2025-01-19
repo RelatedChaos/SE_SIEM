@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="incidents-container">
+    <h1>Incidents</h1>
+    <div class="incidents-header">
+        <div class="filters">
+            <label for="filter-status">Filter by Status:</label>
+            <select id="filter-status" class="form-control">
+                <option value="all">All</option>
+                <option value="open">Open</option>
+                <option value="closed">Closed</option>
+                <option value="in-progress">In Progress</option>
+            </select>
+        </div>
+        <button class="btn-create" onclick="location.href='/create_incident'">Create New Incident</button>
+    </div>
+    <table class="incidents-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for incident in incidents %}
+            <tr>
+                <td>{{ incident.id }}</td>
+                <td>{{ incident.title }}</td>
+                <td>{{ incident.description }}</td>
+                <td>{{ incident.status }}</td>
+                <td>{{ incident.created_at }}</td>
+                <td>
+                    <button class="btn-view" onclick="location.href='/view_incident/{{ incident.id }}'">View</button>
+                    <button class="btn-edit" onclick="location.href='/edit_incident/{{ incident.id }}'">Edit</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .incidents-container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .incidents-container h1 {
+        text-align: center;
+        color: #007BFF;
+        margin-bottom: 20px;
+    }
+    .incidents-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .filters {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .form-control {
+        padding: 8px 12px;
+        font-size: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    .btn-create {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .btn-create:hover {
+        background-color: #218838;
+    }
+    .incidents-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .incidents-table thead {
+        background-color: #007BFF;
+        color: white;
+    }
+    .incidents-table th,
+    .incidents-table td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+    .incidents-table tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    .incidents-table tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+    .btn-view {
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .btn-view:hover {
+        background-color: #0056b3;
+    }
+    .btn-edit {
+        background-color: #ffc107;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .btn-edit:hover {
+        background-color: #e0a800;
+    }
+</style>
+{% endblock %}

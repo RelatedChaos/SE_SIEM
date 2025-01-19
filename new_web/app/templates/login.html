@@ -1,23 +1,95 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="login-container">
     <h1>Sign In</h1>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
-        <p>
-            {{ form.username.label }}<br>
-            {{ form.username(size=32) }}
+        <div class="form-group">
+            <label for="username">{{ form.username.label }}</label>
+            {{ form.username(class="form-control", id="username", placeholder="Enter your username") }}
             {% for error in form.username.errors %}
-            <span style="color: red;">[{{ error }}]</span>
+            <span class="error-message">[{{ error }}]</span>
             {% endfor %}
-        </p>
-        <p>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}
+        </div>
+        <div class="form-group">
+            <label for="password">{{ form.password.label }}</label>
+            {{ form.password(class="form-control", id="password", placeholder="Enter your password") }}
             {% for error in form.password.errors %}
-            <span style="color: red;">[{{ error }}]</span>
+            <span class="error-message">[{{ error }}]</span>
             {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
+        </div>
+        <div class="form-actions">
+            {{ form.submit(class="btn-submit") }}
+        </div>
     </form>
+</div>
+
+<style>
+    .login-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .login-container h1 {
+        font-size: 2rem;
+        color: #007BFF;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 1rem;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    .form-control:focus {
+        border-color: #007BFF;
+        outline: none;
+    }
+
+    .error-message {
+        color: red;
+        font-size: 0.9rem;
+    }
+
+    .form-actions {
+        margin-top: 20px;
+    }
+
+    .btn-submit {
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        background-color: #0056b3;
+    }
+</style>
 {% endblock %}

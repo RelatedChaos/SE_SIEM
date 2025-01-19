@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="configuration-container">
+    <h1>Configuration Settings</h1>
+
+    <!-- Current Configuration Display -->
+    <div class="current-configurations">
+        <h2>Current Configurations</h2>
+        <table class="config-table">
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Type</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for conf in configurations %}
+                <tr>
+                    <td>{{ conf.config_name }}</td>
+                    <td>{{ conf.config_type }}</td>
+                    <td>{{ conf.value }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Configuration Form -->
+    <div class="configuration-form">
+        <h2>Update Configuration</h2>
+        <form action="/save_configuration" method="post">
+            <div class="form-group">
+                <label for="config-key">Configuration Key</label>
+                <input type="text" id="config-key" name="config_key" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="config-value">Configuration Value</label>
+                <input type="text" id="config-value" name="config_value" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="config-type">Configuration Type</label>
+                <input type="text" id="config-value" name="config_value" class="form-control" required>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-save">Save Configuration</button>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-add">Add Configuration</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .configuration-container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .configuration-container h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #007BFF;
+    }
+    .current-configurations {
+        margin-bottom: 40px;
+    }
+    .current-configurations h2 {
+        color: #007BFF;
+        margin-bottom: 15px;
+    }
+    .config-table {
+        width: 100%;
+        border-collapse: collapse;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+    .config-table th, .config-table td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+    .config-table thead {
+        background-color: #007BFF;
+        color: white;
+    }
+    .config-table tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    .config-table tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+    .configuration-form {
+        background: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .configuration-form h2 {
+        color: #007BFF;
+        margin-bottom: 20px;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-group label {
+        display: block;
+        font-size: 1rem;
+        color: #333;
+        margin-bottom: 5px;
+    }
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+    .form-control:focus {
+        border-color: #007BFF;
+        outline: none;
+    }
+    .btn-save {
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .btn-add {
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .btn-save:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}
