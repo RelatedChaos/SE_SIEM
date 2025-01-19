@@ -1,0 +1,15 @@
+run:
+Shold be ran as different processes.
+TO DO - Create services
+
+
+
+python db/dp_app.py
+python ev_listener/main.py
+python new_web/web_app.py
+
+
+
+Default credentials:
+sysadmin - sysadmin
+

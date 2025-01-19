@@ -147,6 +147,12 @@ class AutomaticResponse(db.Model):
 
     #relationships
 
+    #helper funcitons
+    def to_dict(self):
+        ret = {'id': self.id, 'type': self.action_type, 'time': self.response_timestamp, 'details': self.action_details, 'location': self.script_location, 'status': self.status}
+        return ret
+
+
 
 class Parser(object):
     

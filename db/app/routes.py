@@ -1,6 +1,6 @@
 from app import app
 from app import db
-from app.models import User, Event
+from app.models import User, Event, AutomaticResponse
 import sqlalchemy as sa
 from flask import request
 from flask_httpauth import HTTPBasicAuth
@@ -120,5 +120,23 @@ def parse_events():
           db.session.add(ev)
           db.session.commit()
           return '200'
+     
+@app.route('/orchestration', methods = ['GET'])
+def get_orchestration():
+     ret = AutomaticResponse.query.all()
+     resp = [orc.to_dict() for orc in ret]
+     return resp
+
+@app.route('/orchestration', methods = ['PUT'])
+def put_orchestration():
+     data = request.get_json()
+     orchestration = AutomaticResponse()
+     orchestration.action_details = data['details']
+     orchestration.action_type = data['type']
+     orchestration.script_location = data['name']
+     orchestration.status = data['status']
+     db.session.add(orchestration)
+     db.session.commit()
+     return '200'
 
 

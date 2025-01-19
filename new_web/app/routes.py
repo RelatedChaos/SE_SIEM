@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import login_user, logout_user, login_required
 from app.forms import LoginForm
 import requests
@@ -22,7 +22,11 @@ def login():
             flash('Please enter credentials')
             return redirect(url_for('login'))
         
-        user = User.do_auth(username, password)
+        try:
+            user = User.do_auth(username, password)
+        except Exception as e:
+            flash('Invalid login')
+            return redirect(url_for('login'))
         if user:
             login_user(user)
             flash('Login successful!')
@@ -52,4 +56,18 @@ def get_events():
     data = requests.get('http://127.0.0.1:5001/events', json={'page': '1', 'per_page': '100'}).json()
     return render_template('events.html', title='Events', events=data['events'])
 
+@app.route('/orchestration')
+def get_orchestration():
+    data = {}
+    data = requests.get('http://127.0.0.1:5001/orchestration').json()
+    return render_template('orchestration.html', title='Orchestration', orchestrations = data)
+
+@app.route('/process_orc')
+def process_orc():
+    print('exec proc')
+    orc = request.args.get('orc')
+    headers = {'Content-Type': 'application/json'}
+    resp = requests.get('http://127.0.0.1:5006/do_execute', headers=headers, json={'location':orc}).json()
+    print(resp)
+    return jsonify({"message": f"Orchestration {orc} processed successfully response is {resp['response']}!"})
 
